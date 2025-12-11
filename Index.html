@@ -1,15 +1,152 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <meta charset="UTF-8" />
+    <title>Магазин Всякого</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f4;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .products {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+        }
+        .product {
+            background: #fff;
+            padding: 15px;
+            border-radius: 8px;
+            width: 200px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .product img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin-bottom: 10px;
+        }
+        .product h3 {
+            margin: 0 0 10px;
+            font-size: 1.2em;
+        }
+        .price {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        button {
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        #cart {
+            margin-top: 30px;
+        }
+        #cart h2 {
+            margin-bottom: 10px;
+        }
+        #cart-items {
+            list-style: none;
+            padding: 0;
+        }
+        #cart-items li {
+            padding: 5px 0;
+        }
+        /* Адаптивность */
+        @media(max-width: 600px) {
+            .products {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
 </head>
 <body>
-    <head> 
-<p> тут будет сайт </p>
-        
-    </head>
-    
+    <header>
+        <h1>Магазин Всякого</h1>
+    </header>
+
+    <div class="products" id="product-list">
+        <!-- Товары будут добавлены здесь скриптом -->
+    </div>
+
+    <div id="cart">
+        <h2>Корзина</h2>
+        <ul id="cart-items"></ul>
+        <p><strong>Всего товаров:</strong> <span id="total-count">0</span></p>
+    </div>
+
+    <script>
+        // Пример данных товаров
+        const products = [
+            { id: 1, name: "Книга", price: 300, image: "https://via.placeholder.com/150?text=Книга" },
+            { id: 2, name: "Игрушка", price: 500, image: "https://via.placeholder.com/150?text=Игрушка" },
+            { id: 3, name: "Чайник", price: 1500, image: "https://via.placeholder.com/150?text=Чайник" },
+            { id: 4, name: "Рюкзак", price: 1200, image: "https://via.placeholder.com/150?text=Рюкзак" }
+        ];
+
+        const productList = document.getElementById('product-list');
+        const cartItems = document.getElementById('cart-items');
+        const totalCountSpan = document.getElementById('total-count');
+
+        // Массив корзины
+        const cart = [];
+
+        // Функция для отображения товаров
+        function renderProducts() {
+            products.forEach(product => {
+                const productDiv = document.createElement('div');
+                productDiv.className = 'product';
+
+                productDiv.innerHTML = `
+                    <img src="${product.image}" alt="${product.name}">
+                    <h3>${product.name}</h3>
+                    <div class="price">${product.price} руб.</div>
+                    <button onclick="addToCart(${product.id})">Добавить в корзину</button>
+                `;
+                productList.appendChild(productDiv);
+            });
+        }
+
+        // Функция добавления в корзину
+        function addToCart(productId) {
+            const product = products.find(p => p.id === productId);
+            if (product) {
+                cart.push(product);
+                updateCart();
+            }
+        }
+
+        // Обновление корзины
+        function updateCart() {
+            cartItems.innerHTML = '';
+            cart.forEach((item, index) => {
+                const li = document.createElement('li');
+                li.textContent = `${item.name} - ${item.price} руб. [Удалить]`;
+                li.style.cursor = 'pointer';
+                li.onclick = () => {
+                    cart.splice(index, 1);
+                    updateCart();
+                };
+                cartItems.appendChild(li);
+            });
+            totalCountSpan.textContent = cart.length;
+        }
+
+        // Инициализация
+        renderProducts();
+    </script>
 </body>
 </html>
